@@ -55,9 +55,9 @@ def get_user_game_data(user_name: str):
 
         # while no information, requests matches data
         while(True):
-            if (count == LIMIT):
-                break
-            count += 1
+            # if (count == LIMIT):
+            #     break
+            # count += 1
 
             print("GET requests")
             start_time = game_data_list[-1]['time']
@@ -75,7 +75,7 @@ def get_user_game_data(user_name: str):
                 game_data_list.append(game_data)
 
             print('log 갯수 : ', len(game_data_list))
-        pprint(game_data_list)
+        # pprint(game_data_list)
             
     else:
         raise Exception('fetch fail')
@@ -83,5 +83,5 @@ def get_user_game_data(user_name: str):
 # test code
 if __name__ == '__main__':
     # get_user_info('꿀벌지민')   # Ranked user
-    get_user_game_data('마리마리착마리')
+    get_user_game_data('루모그래프')
     
