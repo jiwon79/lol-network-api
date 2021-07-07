@@ -9,9 +9,25 @@ class Item(BaseModel):
     price: float
     is_offer: Optional[bool] = None
 
+dummy_data = {
+    'node': [
+        {'id': '마리마리착마리', 'value': 1},
+        {'id': '루모그래프', 'value': 1},
+        {'id': '꿀벌지민', 'value': 1},
+        {'id': '리듬타지마', 'value': 1}
+    ],
+    'edge': [
+        {'from': '마리마리착마리', 'to': '루모그래프', 'value': 10},
+        {'from': '마리마리착마리', 'to': '꿀벌지민', 'value': 5},
+        {'from': '루모그래프', 'to': '꿀벌지민', 'value': 15},
+        {'from': '루모그래프', 'to': '리듬타지마', 'value': 3},
+        {'from': '꿀벌지민', 'to': '리듬타지마', 'value': 1}
+    ]
+}
+
 @app.get("/")
 def read_root():
-    return {"Hello": "TestDev"}
+    return dummy_data
 
 @app.get("/items/{item_id}")
 def read_item(item_id: int, q: Optional[str] = None):
