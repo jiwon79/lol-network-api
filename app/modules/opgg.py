@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-import json
 from pprint import pprint
 LIMIT = -1
 
@@ -12,7 +11,6 @@ def getAGameData(log, user_name):
         'result': '',
         'team': []
     }
-
     game_data['id'] = log.select_one('.GameItem')['data-game-id']
     game_data['time'] = log.select_one('.GameItem')['data-game-time']
 
@@ -66,6 +64,7 @@ def getUserAllGameData(user_name: str):
             more_response = requests.get(more_url)
             if more_response.status_code != 200:
                 break
+
             more_html = more_response.json()['html']
             more_soup = BeautifulSoup(more_html, 'html.parser')
             logs = more_soup.select("div.GameItemWrap")
