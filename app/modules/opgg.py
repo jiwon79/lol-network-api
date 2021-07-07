@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from pprint import pprint
 LIMIT = -1
 
-def getGameData(log, user_name):
+def getAGameData(log, user_name):
     game_data = {
         'id': 0,
         'time': 0,
@@ -11,7 +11,6 @@ def getGameData(log, user_name):
         'result': '',
         'team': []
     }
-    
     game_data['id'] = log.select_one('.GameItem')['data-game-id']
     game_data['time'] = log.select_one('.GameItem')['data-game-time']
 
@@ -19,7 +18,7 @@ def getGameData(log, user_name):
         if (team.select('.Requester') != []):
             for summoner in team.select('.Summoner'):
                 name = summoner.select_one('.SummonerName > a').get_text()
-                if (name != user_name):
+                if (user_name.replace(" ","") != name.replace(" ","")):
                     game_data['team'].append(name)
     
     result =  log.select_one('.GameResult').get_text()
@@ -30,7 +29,7 @@ def getGameData(log, user_name):
         
     return game_data
 
-def getAllGameData(user_name: str):
+def getUserAllGameData(user_name: str):
     count = 0
     game_data_list = []
 
@@ -49,7 +48,7 @@ def getAllGameData(user_name: str):
         logs = soup.select("div.GameItemWrap")
 
         for log in logs:
-            game_data = getGameData(log, user_name)
+            game_data = getAGameData(log, user_name)
             game_data_list.append(game_data)
 
         # while no information, requests matches data
@@ -71,15 +70,16 @@ def getAllGameData(user_name: str):
             logs = more_soup.select("div.GameItemWrap")
                 
             for log in logs:
-                game_data = getGameData(log, user_name)
+                game_data = getAGameData(log, user_name)
                 game_data_list.append(game_data)
         # pprint(game_data_list)
+        return game_data_list
             
     else:
         raise Exception('fetch fail')
 
 # test code
 if __name__ == '__main__':
-    # getAllGameData('꿀벌지민')   # Ranked user
-    getAllGameData('마리마리착마리')
+    # getUserAllGameData('꿀벌지민')   # Ranked user
+    getUserAllGameData('마리마리착마리')
     
