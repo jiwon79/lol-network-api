@@ -2,16 +2,17 @@ import requests
 from bs4 import BeautifulSoup
 import json
 from pprint import pprint
-LIMIT = 0
-count = 0
+LIMIT = -1
 
-def get_game_data(log):
+def getAGameData(log, user_name):
     game_data = {
         'id': 0,
         'time': 0,
-        'team': [],
-        'result': ''
+        'player': user_name,
+        'result': '',
+        'team': []
     }
+
     game_data['id'] = log.select_one('.GameItem')['data-game-id']
     game_data['time'] = log.select_one('.GameItem')['data-game-time']
 
@@ -19,7 +20,8 @@ def get_game_data(log):
         if (team.select('.Requester') != []):
             for summoner in team.select('.Summoner'):
                 name = summoner.select_one('.SummonerName > a').get_text()
-                game_data['team'].append(name)
+                if (user_name.replace(" ","") != name.replace(" ","")):
+                    game_data['team'].append(name)
     
     result =  log.select_one('.GameResult').get_text()
     if ('victory' in result):
@@ -29,8 +31,8 @@ def get_game_data(log):
         
     return game_data
 
-def get_user_game_data(user_name: str):
-    global count
+def getUserAllGameData(user_name: str):
+    count = 0
     game_data_list = []
 
     url = f'https://www.op.gg/summoner/userName={user_name}'
@@ -48,18 +50,16 @@ def get_user_game_data(user_name: str):
         logs = soup.select("div.GameItemWrap")
 
         for log in logs:
-            game_data = get_game_data(log)
+            game_data = getAGameData(log, user_name)
             game_data_list.append(game_data)
-
-        print('log 갯수 : ', len(game_data_list))
 
         # while no information, requests matches data
         while(True):
-            # if (count == LIMIT):
-            #     break
-            # count += 1
+            if (count == LIMIT):
+                break
+            count += 1
 
-            print("GET requests")
+            # print("GET requests")
             start_time = game_data_list[-1]['time']
             more_url = f"https://op.gg/summoner/matches/ajax/averageAndList/startInfo={start_time}&summonerId={summonerId}"
             
@@ -71,17 +71,16 @@ def get_user_game_data(user_name: str):
             logs = more_soup.select("div.GameItemWrap")
                 
             for log in logs:
-                game_data = get_game_data(log)
+                game_data = getAGameData(log, user_name)
                 game_data_list.append(game_data)
-
-            print('log 갯수 : ', len(game_data_list))
         # pprint(game_data_list)
+        return game_data_list
             
     else:
         raise Exception('fetch fail')
 
 # test code
 if __name__ == '__main__':
-    # get_user_info('꿀벌지민')   # Ranked user
-    get_user_game_data('루모그래프')
+    # getUserAllGameData('꿀벌지민')   # Ranked user
+    getUserAllGameData('마리마리착마리')
     
