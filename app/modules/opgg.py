@@ -76,8 +76,22 @@ def getUserAllGameData(user_name: str):
     else:
         raise Exception('fetch fail')
 
+def getUserFrield(user_log):
+    team, friend = {}, []
+    for log in user_log:
+        for member in log['team']:
+            if member in team:
+                team[member] += 1
+            else:
+                team[member] = 0
+    for key in team.keys():
+        if team[key] > 1:
+            friend.append({key: team[key]})
+    return friend
+
 # test code
 if __name__ == '__main__':
     # getUserAllGameData('꿀벌지민')   # Ranked user
-    getUserAllGameData('침대에서 뒹굴')
-    
+    user_log = getUserAllGameData('마리마리착마리')
+    friend = getUserFrield(user_log)
+    print(friend)
