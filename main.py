@@ -52,9 +52,11 @@ dummy_data = {
 def read_root():
   return dummy_data
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Optional[str] = None):
-    return {"item_id": item_id, "q": q}
+@app.get("/user/{user_name}")
+def get_user_friend(user_name: str):
+    user_log = getUserAllGameData(user_name)
+    friend = getUserFrield(user_log)
+    return friend
 
 @app.put("/items/{item_id}")
 def update_item(item_id: int, item: Item):
