@@ -90,8 +90,8 @@ def getUserFrield(user_log):
     return friend
 
 # test code
-if __name__ == '__main__':
-    # getUserAllGameData('꿀벌지민')   # Ranked user
-    user_log = getUserAllGameData('마리마리착마리')
-    friend = getUserFrield(user_log)
-    print(friend)
+# if __name__ == '__main__':
+#     # getUserAllGameData('꿀벌지민')   # Ranked user
+#     user_log = getUserAllGameData('마리마리착마리')
+#     friend = getUserFrield(user_log)
+#     print(friend)

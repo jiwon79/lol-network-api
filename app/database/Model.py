@@ -19,7 +19,7 @@ class Model():
             self.db.execute(sql, data)
         return True
 
-if __name__ == "__main__":
-    db = Model()
-    result = db.getAllGameData()
-    print(result)
+# if __name__ == "__main__":
+#     db = Model()
+#     result = db.getAllGameData()
+#     print(result)
