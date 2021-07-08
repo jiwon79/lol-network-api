@@ -15,16 +15,11 @@ def uploadLog(user_log):
     try:
         with pg2.connect(dbname=dbname, user=user, password=password, host=host, port=port) as conn:
             with conn.cursor() as cur:
-                # for log in user_log:
-                #     id, time, player, result, team = log['id'], log['time'], log['player'], log['result'], log['team']
-                #     sql = f"INSERT INTO log_test VALUES({id}, {time}, '{player}', '{result}', '{team[0]}', '{team[1]}', '{team[2]}', '{team[3]}')"
-                #     print(sql)
-                #     cur.execute(sql)
-                sql = 'ALTER TABLE public.log_test ALTER COLUMN "time" TYPE int USING "time"::int;'
-                cur.execute(sql)
-
-                sql = 'ALTER TABLE public.log_test ALTER COLUMN id TYPE int USING id::int;'
-                cur.execute(sql)
+                for log in user_log:
+                    id, time, player, result, summonerId, team = log['id'], log['time'], log['player'], log['result'], log['summonerId'], log['team']
+                    sql = f"INSERT INTO log_test VALUES({id}, {time}, '{player}', '{result}', {summonerId}, '{team[0]}', '{team[1]}', '{team[2]}', '{team[3]}')"
+                    print(sql)
+                    cur.execute(sql)
 
                 cur.execute("SELECT * FROM log_test")
                 rows = cur.fetchall()
@@ -37,6 +32,7 @@ def uploadLog(user_log):
         if conn:
             conn.close()
 
+# def uploadUser(user_name, nickName)
 if __name__=="__main__":
     user_log = getUserAllGameData("마리마리착마리")
     uploadLog(user_log)
