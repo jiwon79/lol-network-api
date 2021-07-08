@@ -5,9 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.database.Model import Model
 from app.modules.opgg import *
-db = Model()
 app = FastAPI()
-
 
 origins = [
     'http://streamer-network.netlify.app/',
@@ -62,8 +60,8 @@ def get_user_friend(user_name: str):
 def update_item(item_id: int, item: Item):
     return {"item_name": item.name, "item_id": item_id}
 
-if __name__ == "__main__":
-    user_log = getUserAllGameData('침대에서 뒹굴')
-    print(user_log[0])
-    db.insertUserLog(user_log)
-    
+# if __name__ == "__main__":
+#     user_name = "마리마리착마리"
+#     user_log = getUserAllGameData(user_name)
+#     friend = getUserFrield(user_log)
+#     print(friend)    

@@ -7,7 +7,7 @@ class Model():
         self.db = DBEngine()
     
     def getAllGameData(self):
-        sql = "SELECT * FROM cars"
+        sql = "SELECT * FROM log_test"
         result = self.db.execute(sql)
         return result
     
@@ -17,12 +17,6 @@ class Model():
             sql = "INSERT INTO log_test values(%s, %s, %s, %s, %s, %s, %s, %s, %s)"
             data = [id, time, player, result, summonerId, team[0], team[1], team[2], team[3]]
             self.db.execute(sql, data)
-        return True
-
-    def test(self, i):
-        sql = "INSERT INTO cars values(%s, %s, %s)"
-        data = [i, "name", i]
-        self.db.execute(sql, data)
         return True
 
 if __name__ == "__main__":
