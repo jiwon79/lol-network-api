@@ -47,14 +47,14 @@ class DBEngine:
         
 
 # test code
-if __name__ == "__main__":    
-    db = DBEngine()
-    # sql = "INSERT INTO cars (id, name, price) values (%s, %s, %s);"
-    # db.execute(sql, (5, 'name', 1000))
+# if __name__ == "__main__":    
+#     db = DBEngine()
+#     sql = "INSERT INTO cars (id, name, price) values (%s, %s, %s);"
+#     db.execute(sql, (5, 'name', 1000))
 
-    # sql = "INSERT INTO cars VALUES(4,'Audi' ,52642)"
-    # db.execute(sql, [])
+#     sql = "INSERT INTO cars VALUES(4,'Audi' ,52642)"
+#     db.execute(sql, [])
 
-    sql = "SELECT * FROM cars"
-    result = db.execute(sql, [])
-    print(result)
+#     sql = "SELECT * FROM cars"
+#     result = db.execute(sql, [])
+#     print(result)
