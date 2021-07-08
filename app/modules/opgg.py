@@ -70,7 +70,7 @@ def getUserAllGameData(user_name: str):
             for log in logs:
                 game_data = getAGameData(log, user_name, summonerId)
                 game_data_list.append(game_data)
-        pprint(game_data_list)
+        # pprint(game_data_list)
         return game_data_list
             
     else:
@@ -79,5 +79,5 @@ def getUserAllGameData(user_name: str):
 # test code
 if __name__ == '__main__':
     # getUserAllGameData('꿀벌지민')   # Ranked user
-    getUserAllGameData('마리마리착마리')
+    getUserAllGameData('침대에서 뒹굴')
     

@@ -3,7 +3,11 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.database.Model import Model
+from app.modules.opgg import *
+db = Model()
 app = FastAPI()
+
 
 origins = [
     'http://streamer-network.netlify.app/',
@@ -55,3 +59,9 @@ def read_item(item_id: int, q: Optional[str] = None):
 @app.put("/items/{item_id}")
 def update_item(item_id: int, item: Item):
     return {"item_name": item.name, "item_id": item_id}
+
+if __name__ == "__main__":
+    user_log = getUserAllGameData('침대에서 뒹굴')
+    print(user_log[0])
+    db.insertUserLog(user_log)
+    
