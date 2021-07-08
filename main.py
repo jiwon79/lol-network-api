@@ -3,7 +3,6 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.database.Model import Model
 from app.modules.opgg import *
 app = FastAPI()
 
@@ -48,7 +47,7 @@ dummy_data = {
 
 @app.get("/")
 def read_root():
-  return dummy_data
+    return dummy_data
 
 @app.get("/user/{user_name}")
 def get_user_friend(user_name: str):

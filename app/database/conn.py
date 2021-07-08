@@ -47,7 +47,7 @@ class DBEngine:
         
 
 # test code
-# if __name__ == "__main__":    
+# if __name__ == "__main__":  
 #     db = DBEngine()
 #     sql = "INSERT INTO cars (id, name, price) values (%s, %s, %s);"
 #     db.execute(sql, (5, 'name', 1000))
