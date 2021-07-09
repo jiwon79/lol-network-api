@@ -13,7 +13,7 @@ origins = [
     'http://localhost:3000',
     'http://localhost:3001',
     'http://localhost:3002',
-    'http://localhost:8000'
+    'http://localhost:8000',
 ]
 
 app.add_middleware(
@@ -54,6 +54,11 @@ def get_user_friend(user_name: str):
     user_log = getUserAllGameData(user_name)
     friend = getUserFrield(user_log)
     return friend
+
+@app.get("/userlog/{user_name}")
+def get_user_log(user_name: str):
+    user_log = getUserAllGameData(user_name)
+    return user_log
 
 @app.put("/items/{item_id}")
 def update_item(item_id: int, item: Item):
