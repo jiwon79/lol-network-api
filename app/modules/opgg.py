@@ -60,14 +60,14 @@ def getUserAllGameData(user_name: str):
             more_url = f"https://op.gg/summoner/matches/ajax/averageAndList/startInfo={start_time}&summonerId={summonerId}"
             
             more_response = requests.get(more_url)
-            return {'result': more_response.status_code}
             if more_response.status_code != 200:
                 break
 
             more_html = more_response.json()['html']
+            return {'result': more_html}
+            
             more_soup = BeautifulSoup(more_html, 'html.parser')
             logs = more_soup.select("div.GameItemWrap")
-                
             for log in logs:
                 game_data = getAGameData(log, user_name, summonerId)
                 game_data_list.append(game_data)
@@ -92,7 +92,7 @@ def getUserFrield(user_log):
 
 # test code
 if __name__ == '__main__':
-    user_log = getUserAllGameData('꿀벌지민')
+    user_log = getUserAllGameData('마리마리착마리')
     pprint(user_log)
     pprint(type(user_log))
     print(len(user_log))
