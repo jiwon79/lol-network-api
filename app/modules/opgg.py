@@ -58,11 +58,11 @@ def getUserAllGameData(user_name: str):
             # print("GET requests")
             start_time = game_data_list[-1]['time']
             more_url = f"https://op.gg/summoner/matches/ajax/averageAndList/startInfo={start_time}&summonerId={summonerId}"
-            return more_url
+
             more_response = requests.get(more_url)
-            if more_response.status_code != 200:
-                break
-            
+            # if more_response.status_code != 200:
+            #     break
+            return more_response.json()
             more_html = more_response.json()
             return more_html
             more_html = more_html['html']
@@ -94,7 +94,7 @@ def getUserFrield(user_log):
 
 # test code
 if __name__ == '__main__':
-    user_log = getUserAllGameData('마리마리착마리')
+    user_log = getUserAllGameData('꿀벌지민')
     pprint(user_log)
     pprint(type(user_log))
     # print(len(user_log))
