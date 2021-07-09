@@ -51,6 +51,7 @@ def getUserAllGameData(user_name: str):
 
         # while no information, requests matches data
         while(True):
+            return {"result": "While문"}
             # if (count == LIMIT):
             #     break
             # count += 1
