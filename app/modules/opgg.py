@@ -57,12 +57,14 @@ def getUserAllGameData(user_name: str):
 
             # print("GET requests")
             start_time = game_data_list[-1]['time']
-            more_url = f"https://op.gg/summoner/matches/ajax/averageAndList/startInfo={start_time}&summonerId={summonerId}"     
+            more_url = f"https://www.op.gg/summoner/matches/ajax/averageAndList/startInfo={start_time}&summonerId={summonerId}"
+            print(more_url)
+                            
             header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:90.0) Gecko/20100101 Firefox/90.0'}
             more_response = requests.get(more_url, headers=header)
             return {"result": more_response.status_code}
             if more_response.status_code != 200:
-                return {"result": more_response.status_code}
+                return {"result": more_response.status_code, "len": len(game_data_list)}
                 break
             more_html = more_response.json()
             return more_html
