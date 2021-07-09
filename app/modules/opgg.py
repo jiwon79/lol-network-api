@@ -60,9 +60,9 @@ def getUserAllGameData(user_name: str):
             more_url = f"https://op.gg/summoner/matches/ajax/averageAndList/startInfo={start_time}&summonerId={summonerId}"
 
             more_response = requests.get(more_url)
-            # if more_response.status_code != 200:
-            #     break
-            return more_response.json()
+            if more_response.status_code != 200:
+                return {"result": "status = 200"}
+                break
             more_html = more_response.json()
             return more_html
             more_html = more_html['html']
