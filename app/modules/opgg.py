@@ -37,7 +37,7 @@ def getUserAllGameData(user_name: str):
     if response.status_code == 200:
         html = response.text
         soup = BeautifulSoup(html, 'html.parser')
-        return soup
+        return html
 
         # if summoner doesn't exist, return {}
         if soup.select_one('.SummonerNotFoundLayout') is not None:
