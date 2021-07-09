@@ -61,7 +61,7 @@ def getUserAllGameData(user_name: str):
 
             more_response = requests.get(more_url)
             if more_response.status_code != 200:
-                return {"result": "status = 200"}
+                return {"result": more_response.status_code}
                 break
             more_html = more_response.json()
             return more_html
