@@ -71,7 +71,7 @@ def getUserAllGameData(user_name: str):
                 game_data = getAGameData(log, user_name, summonerId)
                 game_data_list.append(game_data)
         # pprint(game_data_list)
-        return game_data_list[0]
+        return game_data_list
             
     else:
         raise Exception('fetch fail')
