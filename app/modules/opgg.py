@@ -51,7 +51,6 @@ def getUserAllGameData(user_name: str):
 
         # while no information, requests matches data
         while(True):
-            return {"result": "While문"}
             # if (count == LIMIT):
             #     break
             # count += 1
@@ -61,6 +60,7 @@ def getUserAllGameData(user_name: str):
             more_url = f"https://op.gg/summoner/matches/ajax/averageAndList/startInfo={start_time}&summonerId={summonerId}"
             
             more_response = requests.get(more_url)
+            return {'result': more_response.status_code}
             if more_response.status_code != 200:
                 break
 
