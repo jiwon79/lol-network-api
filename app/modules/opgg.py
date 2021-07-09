@@ -62,12 +62,14 @@ def getUserAllGameData(user_name: str):
             more_response = requests.get(more_url)
             if more_response.status_code != 200:
                 break
-
-            more_html = more_response.json()['html']
-            return {'result': more_html}
             
+            more_html = more_response.json()
+            return more_html
+            more_html = more_html['html']
+
             more_soup = BeautifulSoup(more_html, 'html.parser')
             logs = more_soup.select("div.GameItemWrap")
+            print(logs)
             for log in logs:
                 game_data = getAGameData(log, user_name, summonerId)
                 game_data_list.append(game_data)
@@ -95,6 +97,6 @@ if __name__ == '__main__':
     user_log = getUserAllGameData('마리마리착마리')
     pprint(user_log)
     pprint(type(user_log))
-    print(len(user_log))
+    # print(len(user_log))
 #     friend = getUserFrield(user_log)
 #     print(friend)
