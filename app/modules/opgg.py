@@ -64,6 +64,7 @@ def getUserAllGameData(user_name: str):
                 header[head['key']] = head['value']            
             
             more_response = requests.get(more_url, headers=header)
+            return {"result": more_response.status_code}
             if more_response.status_code != 200:
                 return {"result": more_response.status_code}
                 break
