@@ -60,12 +60,9 @@ def getUserAllGameData(user_name: str):
             more_url = f"https://www.op.gg/summoner/matches/ajax/averageAndList/startInfo={start_time}&summonerId={summonerId}"                            
             header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:90.0) Gecko/20100101 Firefox/90.0'}
             more_response = requests.get(more_url, headers=header)
-            # return {"result": more_response.status_code}
             if more_response.status_code != 200:
-                # return {"result": more_response.status_code, "len": len(game_data_list)}
                 break
             more_html = more_response.json()
-            # return more_html
             more_html = more_html['html']
 
             more_soup = BeautifulSoup(more_html, 'html.parser')
@@ -93,10 +90,10 @@ def getUserFrield(user_log):
     return friend
 
 # test code
-if __name__ == '__main__':
-    user_log = getUserAllGameData('꿀벌지민')
-    pprint(user_log)
-    pprint(type(user_log))
+# if __name__ == '__main__':
+#     user_log = getUserAllGameData('리듬타지마')
+#     pprint(user_log)
+#     pprint(type(user_log))
     # print(len(user_log))
 #     friend = getUserFrield(user_log)
 #     print(friend)
