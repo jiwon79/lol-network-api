@@ -37,6 +37,7 @@ def getUserAllGameData(user_name: str):
     if response.status_code == 200:
         html = response.text
         soup = BeautifulSoup(html, 'html.parser')
+        return soup
 
         # if summoner doesn't exist, return {}
         if soup.select_one('.SummonerNotFoundLayout') is not None:
@@ -44,7 +45,6 @@ def getUserAllGameData(user_name: str):
 
         summonerId = int(soup.select_one('.GameListContainer')['data-summoner-id'])
         logs = soup.select("div.GameItemWrap")
-        return logs
         for log in logs:
             game_data = getAGameData(log, user_name, summonerId)
             game_data_list.append(game_data)
@@ -91,7 +91,8 @@ def getUserFrield(user_log):
 
 # test code
 # if __name__ == '__main__':
-#     # getUserAllGameData('꿀벌지민')   # Ranked user
+#     getUserAllGameData('꿀벌지민')   # Ranked user
 #     user_log = getUserAllGameData('마리마리착마리')
+#     print(user_log)
 #     friend = getUserFrield(user_log)
 #     print(friend)
