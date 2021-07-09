@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from pprint import pprint
-LIMIT = -1
+LIMIT = 14
 
 def getAGameData(log, user_name, summonerId):
     game_data = {
@@ -89,10 +89,10 @@ def getUserFrield(user_log):
     return friend
 
 # test code
-# if __name__ == '__main__':
-#     user_log = getUserAllGameData('리듬타지마')
-#     pprint(user_log)
-#     pprint(type(user_log))
-#     print(len(user_log))
+if __name__ == '__main__':
+    user_log = getUserAllGameData('루모그래프')
+    pprint(user_log)
+    pprint(type(user_log))
+    print(len(user_log))
 #     friend = getUserFrield(user_log)
 #     print(friend)
