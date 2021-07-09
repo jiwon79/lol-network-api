@@ -43,10 +43,6 @@ def getUserAllGameData(user_name: str):
             return {}
 
         summonerId = int(soup.select_one('.GameListContainer')['data-summoner-id'])
-        result = {
-            'summonerId': summonerId
-        }
-        return result
 
         logs = soup.select("div.GameItemWrap")
         for log in logs:
@@ -75,7 +71,7 @@ def getUserAllGameData(user_name: str):
                 game_data = getAGameData(log, user_name, summonerId)
                 game_data_list.append(game_data)
         # pprint(game_data_list)
-        return game_data_list
+        return game_data_list[0]
             
     else:
         raise Exception('fetch fail')
@@ -95,8 +91,8 @@ def getUserFrield(user_log):
 
 # test code
 # if __name__ == '__main__':
-#     getUserAllGameData('꿀벌지민')   # Ranked user
-#     user_log = getUserAllGameData('마리마리착마리')
-#     print(user_log)
+#     user_log = getUserAllGameData('리듬타지마')
+#     print(type(user_log))
+#     pprint(user_log)
 #     friend = getUserFrield(user_log)
 #     print(friend)
