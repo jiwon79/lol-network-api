@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from pprint import pprint
-LIMIT = -1
+LIMIT = 14
 
 def getAGameData(log, user_name, summonerId):
     game_data = {
@@ -35,17 +35,15 @@ def getUserAllGameData(user_name: str):
     response = requests.get(url)
 
     if response.status_code == 200:
-        html = response.text
-        return html
-        soup = BeautifulSoup(html, 'html.parser')
+        soup = BeautifulSoup(response.text, 'html.parser')
 
         # if summoner doesn't exist, return {}
         if soup.select_one('.SummonerNotFoundLayout') is not None:
             return {}
 
         summonerId = int(soup.select_one('.GameListContainer')['data-summoner-id'])
-        logs = soup.select("div.GameItemWrap")
 
+        logs = soup.select("div.GameItemWrap")
         for log in logs:
             game_data = getAGameData(log, user_name, summonerId)
             game_data_list.append(game_data)
@@ -58,16 +56,15 @@ def getUserAllGameData(user_name: str):
 
             # print("GET requests")
             start_time = game_data_list[-1]['time']
-            more_url = f"https://op.gg/summoner/matches/ajax/averageAndList/startInfo={start_time}&summonerId={summonerId}"
-            
-            more_response = requests.get(more_url)
+            more_url = f"https://www.op.gg/summoner/matches/ajax/averageAndList/startInfo={start_time}&summonerId={summonerId}"                            
+            header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:90.0) Gecko/20100101 Firefox/90.0'}
+            more_response = requests.get(more_url, headers=header)
             if more_response.status_code != 200:
                 break
-
             more_html = more_response.json()['html']
             more_soup = BeautifulSoup(more_html, 'html.parser')
             logs = more_soup.select("div.GameItemWrap")
-                
+
             for log in logs:
                 game_data = getAGameData(log, user_name, summonerId)
                 game_data_list.append(game_data)
@@ -85,14 +82,17 @@ def getUserFrield(user_log):
                 team[member] += 1
             else:
                 team[member] = 0
+
     for key in team.keys():
         if team[key] > 1:
             friend.append({key: team[key]})
     return friend
 
 # test code
-# if __name__ == '__main__':
-#     # getUserAllGameData('꿀벌지민')   # Ranked user
-#     user_log = getUserAllGameData('마리마리착마리')
+if __name__ == '__main__':
+    user_log = getUserAllGameData('루모그래프')
+    pprint(user_log)
+    pprint(type(user_log))
+    print(len(user_log))
 #     friend = getUserFrield(user_log)
 #     print(friend)
