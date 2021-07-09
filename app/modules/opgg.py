@@ -36,7 +36,6 @@ def getUserAllGameData(user_name: str):
 
     if response.status_code == 200:
         html = response.text
-        return html
         soup = BeautifulSoup(html, 'html.parser')
 
         # if summoner doesn't exist, return {}
@@ -45,7 +44,7 @@ def getUserAllGameData(user_name: str):
 
         summonerId = int(soup.select_one('.GameListContainer')['data-summoner-id'])
         logs = soup.select("div.GameItemWrap")
-
+        return logs
         for log in logs:
             game_data = getAGameData(log, user_name, summonerId)
             game_data_list.append(game_data)
