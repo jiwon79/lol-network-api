@@ -35,8 +35,7 @@ def getUserAllGameData(user_name: str):
     response = requests.get(url)
 
     if response.status_code == 200:
-        html = response.text
-        soup = BeautifulSoup(html, 'html.parser')
+        soup = BeautifulSoup(response.text, 'html.parser')
 
         # if summoner doesn't exist, return {}
         if soup.select_one('.SummonerNotFoundLayout') is not None:
@@ -51,9 +50,9 @@ def getUserAllGameData(user_name: str):
 
         # while no information, requests matches data
         while(True):
-            # if (count == LIMIT):
-            #     break
-            # count += 1
+            if (count == LIMIT):
+                break
+            count += 1
 
             # print("GET requests")
             start_time = game_data_list[-1]['time']
@@ -62,11 +61,10 @@ def getUserAllGameData(user_name: str):
             more_response = requests.get(more_url, headers=header)
             if more_response.status_code != 200:
                 break
-            more_html = more_response.json()
-            more_html = more_html['html']
-
+            more_html = more_response.json()['html']
             more_soup = BeautifulSoup(more_html, 'html.parser')
             logs = more_soup.select("div.GameItemWrap")
+
             for log in logs:
                 game_data = getAGameData(log, user_name, summonerId)
                 game_data_list.append(game_data)
@@ -84,6 +82,7 @@ def getUserFrield(user_log):
                 team[member] += 1
             else:
                 team[member] = 0
+
     for key in team.keys():
         if team[key] > 1:
             friend.append({key: team[key]})
@@ -94,6 +93,6 @@ def getUserFrield(user_log):
 #     user_log = getUserAllGameData('리듬타지마')
 #     pprint(user_log)
 #     pprint(type(user_log))
-    # print(len(user_log))
+#     print(len(user_log))
 #     friend = getUserFrield(user_log)
 #     print(friend)
