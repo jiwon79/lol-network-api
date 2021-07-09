@@ -58,7 +58,7 @@ def getUserAllGameData(user_name: str):
             # print("GET requests")
             start_time = game_data_list[-1]['time']
             more_url = f"https://op.gg/summoner/matches/ajax/averageAndList/startInfo={start_time}&summonerId={summonerId}"
-            
+            return more_url
             more_response = requests.get(more_url)
             if more_response.status_code != 200:
                 break
