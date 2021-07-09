@@ -45,15 +45,16 @@ def getUserAllGameData(user_name: str):
         summonerId = int(soup.select_one('.GameListContainer')['data-summoner-id'])
 
         logs = soup.select("div.GameItemWrap")
+        return logs
         for log in logs:
             game_data = getAGameData(log, user_name, summonerId)
             game_data_list.append(game_data)
 
         # while no information, requests matches data
         while(True):
-            if (count == LIMIT):
-                break
-            count += 1
+            # if (count == LIMIT):
+            #     break
+            # count += 1
 
             # print("GET requests")
             start_time = game_data_list[-1]['time']
@@ -90,9 +91,8 @@ def getUserFrield(user_log):
     return friend
 
 # test code
-# if __name__ == '__main__':
-#     user_log = getUserAllGameData('리듬타지마')
-#     print(type(user_log))
-#     pprint(user_log)
+if __name__ == '__main__':
+    user_log = getUserAllGameData('꿀벌준현')
+    pprint(user_log)
 #     friend = getUserFrield(user_log)
 #     print(friend)
