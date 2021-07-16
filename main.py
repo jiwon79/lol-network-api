@@ -82,7 +82,6 @@ def update_item(item_id: int, item: Item):
 @app.get("/rq")
 def rqQueue():
     q = Queue(connection=conn)
-    r = count_words_at_url("http://heroku.com")
     result = q.enqueue(count_words_at_url, "http://heroku.com")
     return {"result": result, "function": r}
 
