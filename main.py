@@ -4,11 +4,17 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.modules.opgg import *
+from app.modules.utils import *
+
+from rq import Queue
+from worker import conn
 app = FastAPI()
 
 origins = [
     'http://streamer-network.netlify.app/',
     'https://streamer-network.netlify.app/',
+    'http://streamer-network.netlify.app',
+    'https://streamer-network.netlify.app',
     'http://localhost',
     'http://localhost:3000',
     'http://localhost:3001',
@@ -16,6 +22,13 @@ origins = [
     'http://localhost:5500',
     'http://localhost:5501',
     'http://localhost:8000',
+    'http://127.0.0.1',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:3001',
+    'http://127.0.0.1:3002',
+    'http://127.0.0.1:5500',
+    'http://127.0.0.1:5501',
+    'http://127.0.0.1:8000',
 ]
 
 app.add_middleware(
@@ -65,6 +78,12 @@ def get_user_log(user_name: str):
 @app.put("/items/{item_id}")
 def update_item(item_id: int, item: Item):
     return {"item_name": item.name, "item_id": item_id}
+
+@app.get("/rq")
+def rqQueue():
+    q = Queue(connection=conn)
+    result = q.enqueue(count_words_at_url, "http://heroku.com")
+    return {"result": result}
 
 # if __name__ == "__main__":
 #     user_name = "마리마리착마리"
