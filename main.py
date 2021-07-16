@@ -83,7 +83,8 @@ def update_item(item_id: int, item: Item):
 def rqQueue():
     q = Queue(connection=conn)
     result = q.enqueue(count_words_at_url, "http://heroku.com")
-    return {"result": result.return_value}
+    r = count_words_at_url("http://heroku.com")
+    return {"result": result, "function": r}
 
 # if __name__ == "__main__":
 #     user_name = "마리마리착마리"
