@@ -85,6 +85,12 @@ def rqQueue():
     result = q.enqueue(count_words_at_url, "http://heroku.com")
     return {"result": result}
 
+@app.get("/empty")
+def clearQueue():
+    q = Queue(connection=conn)
+    q.empty()
+    return {"result" : "success"}
+    
 # if __name__ == "__main__":
 #     user_name = "마리마리착마리"
 #     user_log = getUserAllGameData(user_name)
