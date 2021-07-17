@@ -90,7 +90,7 @@ def rqQueue():
 def clearQueue():
     q = Queue(connection=conn)
     q.empty()
-    return {"result" : q}
+    return {"result" : "success"}
 
 @app.get("/que")
 def clearQueue():
@@ -110,7 +110,13 @@ def add():
 def rqtest():
     q = Queue(connection=conn)
     result = q.enqueue(add)
-    return {"result": result, "Queue": q, "value": result.return_value}
+    return {"result": result, "value": result.return_value}
+
+@app.get("/rqtest2")
+def rqtest():
+    q = Queue(connection=conn)
+    result = q.enqueue(add)
+    return {"value": result.return_value}
 
 @app.get("/wait")
 def wait():
@@ -122,7 +128,7 @@ def wait():
         if result is None:
             done = False
         time.sleep(1)
-    return {"result": result, "Queue": q, "value": result.return_value}
+    return {"value": result}
     
         
 # if __name__ == "__main__":
