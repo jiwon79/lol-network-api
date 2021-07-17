@@ -2,6 +2,7 @@ from typing import Optional
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+import time
 
 from app.modules.opgg import *
 from app.modules.utils import *
@@ -83,21 +84,28 @@ def update_item(item_id: int, item: Item):
 def rqQueue():
     q = Queue(connection=conn)
     result = q.enqueue(count_words_at_url, "http://heroku.com")
-    return {"result": result}
+    return {"result": result, "Queue": q, "value": result.return_value}
 
 @app.get("/empty")
 def clearQueue():
     q = Queue(connection=conn)
     q.empty()
-    return {"result" : "success"}
+    return {"result" : q}
 
-@app.get("/class")
-def returnClass():
-    class test():
-        def __init__(self):
-            self.test = 1
-    t = test()
-    return {"result": t}
+@app.get("/queue")
+def printQueue():
+    q = Queue(connection=conn)
+    return {"result": q}
+
+@app.get("/rqtest")
+def rqtest():
+    def add():
+        a, b = 3, 4
+        return a+b
+        
+    q = Queue(connection=conn)
+    result = q.enqueue(add)
+    return {"result": result, "Queue": q, "value": result.return_value}
 
 # if __name__ == "__main__":
 #     user_name = "마리마리착마리"
