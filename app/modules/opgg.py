@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from pprint import pprint
-LIMIT = 9
+LIMIT = 4
 
 def getAGameData(log, user_name):
     game_data = {
