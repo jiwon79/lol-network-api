@@ -92,10 +92,16 @@ def getUserFrield(user_log):
     for key in team.keys():
         if team[key] > 1:
             friend.append({key: team[key]})
-    return friend
+
+    result = {
+      "userName": user_log['player'],
+      "profileImage": user_log['profileImage'],
+      "friend": friend
+    }
+    return result
 
 # test code
 if __name__ == '__main__':
     user_log = getUserAllGameData('루모그래프')
     friend = getUserFrield(user_log)
-    print(friend)
+    pprint(friend)
