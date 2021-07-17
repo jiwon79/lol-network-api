@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 import time
+import asyncio
 
 from app.modules.opgg import *
 from app.modules.utils import *
@@ -135,6 +136,15 @@ def wait():
 def task():
     result = tasks.addFunc.delay(1,2)
     return {"result": result}
+
+@app.get("/async")
+async def asyncResult():
+    await asyncio.sleep(1)
+    return {"result": "success"}
+
+@app.get("/asyncFunc")
+async def asyncFun():
+
 
 # if __name__ == "__main__":
 #     user_name = "마리마리착마리"
