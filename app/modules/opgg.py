@@ -46,7 +46,8 @@ def getUserAllGameData(user_name: str):
             return {}
 
         result['profileImage'] = "https:" + soup.select_one('.ProfileImage')['src']
-        result['summonerId'] = int(soup.select_one('.GameListContainer')['data-summoner-id'])
+        summonerId  = int(soup.select_one('.GameListContainer')['data-summoner-id'])
+        result['summonerId'] = summonerId
 
         logs = soup.select("div.GameItemWrap")
         for log in logs:
