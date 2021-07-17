@@ -29,8 +29,9 @@ def getUserAllGameData(user_name: str):
     count = 0
     result = {
         'player': user_name,
+        'profileImage': '',
         'summonerId': 0,
-        'game-data': []
+        'gameData': []
     }
     game_data_list = []
 
@@ -44,8 +45,8 @@ def getUserAllGameData(user_name: str):
         if soup.select_one('.SummonerNotFoundLayout') is not None:
             return {}
 
-        summonerId = int(soup.select_one('.GameListContainer')['data-summoner-id'])
-        result['summonerId'] = summonerId
+        result['profileImage'] = "https:" + soup.select_one('.ProfileImage')['src']
+        result['summonerId'] = int(soup.select_one('.GameListContainer')['data-summoner-id'])
 
         logs = soup.select("div.GameItemWrap")
         for log in logs:
@@ -72,16 +73,15 @@ def getUserAllGameData(user_name: str):
             for log in logs:
                 game_data = getAGameData(log, user_name)
                 game_data_list.append(game_data)
-        result['game-data'] = game_data_list
+        result['gameData'] = game_data_list
         # pprint(game_data_list)
         return result
-            
     else:
         raise Exception('fetch fail')
 
 def getUserFrield(user_log):
     team, friend = {}, []
-    for log in user_log['game-data']:
+    for log in user_log['gameData']:
         for member in log['team']:
             if member in team:
                 team[member] += 1
