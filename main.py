@@ -4,10 +4,7 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.modules.opgg import *
-from app.modules.utils import *
 
-from rq import Queue
-from worker import conn
 app = FastAPI()
 
 origins = [
@@ -78,12 +75,6 @@ def get_user_log(user_name: str):
 @app.put("/items/{item_id}")
 def update_item(item_id: int, item: Item):
     return {"item_name": item.name, "item_id": item_id}
-
-@app.get("/rq")
-def rqQueue():
-    q = Queue(connection=conn)
-    result = q.enqueue(count_words_at_url, "http://heroku.com")
-    return {"result": result}
 
 # if __name__ == "__main__":
 #     user_name = "마리마리착마리"
