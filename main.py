@@ -134,8 +134,8 @@ def wait():
 @app.get("/task")
 def task():
     result = tasks.addFunc.delay(1,2)
-    return {"result", result}
-    
+    return {"result": result}
+
 # if __name__ == "__main__":
 #     user_name = "마리마리착마리"
 #     user_log = getUserAllGameData(user_name)
