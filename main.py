@@ -90,7 +90,15 @@ def clearQueue():
     q = Queue(connection=conn)
     q.empty()
     return {"result" : "success"}
-    
+
+@app.get("/class")
+def returnClass():
+    class test():
+        def __init__(self):
+            self.test = 1
+    t = test()
+    return {"result": t}
+
 # if __name__ == "__main__":
 #     user_name = "마리마리착마리"
 #     user_log = getUserAllGameData(user_name)
