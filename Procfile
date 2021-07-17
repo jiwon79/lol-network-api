@@ -1,2 +1,2 @@
 web: uvicorn main:app --host=0.0.0.0 --port=${PORT:-5000}
-worker: python worker.py
+worker: celery worker --app=task.app
