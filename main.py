@@ -6,6 +6,7 @@ import time
 
 from app.modules.opgg import *
 from app.modules.utils import *
+import tasks
 
 from rq import Queue
 from worker import conn
@@ -129,8 +130,12 @@ def wait():
             done = False
         time.sleep(1)
     return {"value": result}
+
+@app.get("/task")
+def task():
+    result = tasks.addFunc.delay(1,2)
+    return {"result", result}
     
-        
 # if __name__ == "__main__":
 #     user_name = "마리마리착마리"
 #     user_log = getUserAllGameData(user_name)
