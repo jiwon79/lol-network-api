@@ -3,13 +3,11 @@ from bs4 import BeautifulSoup
 from pprint import pprint
 LIMIT = 9
 
-def getAGameData(log, user_name, summonerId):
+def getAGameData(log, user_name):
     game_data = {
         'id': 0,
         'time': 0,
-        'player': user_name,
         'result': '',
-        'summonerId': summonerId,
         'team': []
     }
 
@@ -29,6 +27,11 @@ def getAGameData(log, user_name, summonerId):
 
 def getUserAllGameData(user_name: str):
     count = 0
+    result = {
+        'player': user_name,
+        'summonerId': 0,
+        'game-data': []
+    }
     game_data_list = []
 
     url = f'https://www.op.gg/summoner/userName={user_name}'
@@ -42,10 +45,11 @@ def getUserAllGameData(user_name: str):
             return {}
 
         summonerId = int(soup.select_one('.GameListContainer')['data-summoner-id'])
+        result['summonerId'] = summonerId
 
         logs = soup.select("div.GameItemWrap")
         for log in logs:
-            game_data = getAGameData(log, user_name, summonerId)
+            game_data = getAGameData(log, user_name)
             game_data_list.append(game_data)
 
         # while no information, requests matches data
@@ -66,17 +70,18 @@ def getUserAllGameData(user_name: str):
             logs = more_soup.select("div.GameItemWrap")
 
             for log in logs:
-                game_data = getAGameData(log, user_name, summonerId)
+                game_data = getAGameData(log, user_name)
                 game_data_list.append(game_data)
+        result['game-data'] = game_data_list
         # pprint(game_data_list)
-        return game_data_list
+        return result
             
     else:
         raise Exception('fetch fail')
 
 def getUserFrield(user_log):
     team, friend = {}, []
-    for log in user_log:
+    for log in user_log['game-data']:
         for member in log['team']:
             if member in team:
                 team[member] += 1
@@ -91,8 +96,5 @@ def getUserFrield(user_log):
 # test code
 if __name__ == '__main__':
     user_log = getUserAllGameData('루모그래프')
-    pprint(user_log)
-    pprint(type(user_log))
-    print(len(user_log))
-#     friend = getUserFrield(user_log)
-#     print(friend)
+    friend = getUserFrield(user_log)
+    print(friend)
