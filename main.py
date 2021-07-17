@@ -92,21 +92,39 @@ def clearQueue():
     q.empty()
     return {"result" : q}
 
+@app.get("/que")
+def clearQueue():
+    q = Queue(connection=conn)
+    return {"result" : "success"}
+
 @app.get("/queue")
 def printQueue():
     q = Queue(connection=conn)
     return {"result": q}
 
+def add():
+    a, b = 3, 4
+    return a+b
+
 @app.get("/rqtest")
 def rqtest():
-    def add():
-        a, b = 3, 4
-        return a+b
-        
     q = Queue(connection=conn)
     result = q.enqueue(add)
     return {"result": result, "Queue": q, "value": result.return_value}
 
+@app.get("/wait")
+def wait():
+    q = Queue(connection=conn)
+    done = False
+    r = q.enqueue(add)
+    while not done:
+        result = r.return_value
+        if result is None:
+            done = False
+        time.sleep(1)
+    return {"result": result, "Queue": q, "value": result.return_value}
+    
+        
 # if __name__ == "__main__":
 #     user_name = "마리마리착마리"
 #     user_log = getUserAllGameData(user_name)
