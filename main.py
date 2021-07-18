@@ -4,11 +4,14 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.modules.opgg import *
+
 app = FastAPI()
 
 origins = [
-    'http://streamer-network.netlify.app/',
-    'https://streamer-network.netlify.app/',
+    'http://lol-network.netlify.app/',
+    'https://lol-network.netlify.app/',
+    'http://lol-network.netlify.app',
+    'https://lol-network.netlify.app',
     'http://localhost',
     'http://localhost:3000',
     'http://localhost:3001',
@@ -16,6 +19,13 @@ origins = [
     'http://localhost:5500',
     'http://localhost:5501',
     'http://localhost:8000',
+    'http://127.0.0.1',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:3001',
+    'http://127.0.0.1:3002',
+    'http://127.0.0.1:5500',
+    'http://127.0.0.1:5501',
+    'http://127.0.0.1:8000',
 ]
 
 app.add_middleware(
@@ -51,16 +61,16 @@ dummy_data = {
 def read_root():
     return dummy_data
 
-@app.get("/user/{user_name}")
-def get_user_friend(user_name: str):
-    user_log = getUserAllGameData(user_name)
-    friend = getUserFrield(user_log)
-    return friend
-
 @app.get("/userlog/{user_name}")
 def get_user_log(user_name: str):
     user_log = getUserAllGameData(user_name)
     return user_log
+
+@app.get("/friend/{user_name}")
+def get_user_friend(user_name: str):
+    user_log = getUserAllGameData(user_name)
+    friend = getUserFrield(user_log)
+    return friend
 
 @app.put("/items/{item_id}")
 def update_item(item_id: int, item: Item):
