@@ -8,10 +8,10 @@ from app.modules.opgg import *
 app = FastAPI()
 
 origins = [
-    'http://streamer-network.netlify.app/',
-    'https://streamer-network.netlify.app/',
-    'http://streamer-network.netlify.app',
-    'https://streamer-network.netlify.app',
+    'http://lol-network.netlify.app/',
+    'https://lol-network.netlify.app/',
+    'http://lol-network.netlify.app',
+    'https://lol-network.netlify.app',
     'http://localhost',
     'http://localhost:3000',
     'http://localhost:3001',
