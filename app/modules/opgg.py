@@ -1,7 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 from pprint import pprint
-LIMIT = 4
+GAME_LIMIT = 4 # 100 games
+FRIEND_LIMIT = 8
 
 def getAGameData(log, user_name):
     game_data = {
@@ -56,7 +57,7 @@ def getUserAllGameData(user_name: str):
 
         # while no information, requests matches data
         while(True):
-            if (count == LIMIT):
+            if (count == GAME_LIMIT):
                 break
             count += 1
 
@@ -92,6 +93,7 @@ def getUserFrield(user_log):
     for key in team.keys():
         if team[key] > 1:
             friend.append({key: team[key]})
+    friend = sorted(friend, key = lambda info: list(info.values())[0], reverse=True)
 
     result = {
       "userName": user_log['player'],
@@ -102,6 +104,6 @@ def getUserFrield(user_log):
 
 # test code
 if __name__ == '__main__':
-    user_log = getUserAllGameData('루모그래프')
+    user_log = getUserAllGameData('마리마리착마리')
     friend = getUserFrield(user_log)
     pprint(friend)
