@@ -69,6 +69,9 @@ def get_user_log(user_name: str):
 @app.get("/friend/{user_name}")
 def get_user_friend(user_name: str):
     user_log = getUserAllGameData(user_name)
+    if (user_log == {}):
+      return {"result": "no-summoner"}
+    
     friend = getUserFrield(user_log)
     return friend
 
