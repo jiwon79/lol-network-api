@@ -1,10 +1,11 @@
 from typing import Optional
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+from datetime import *
 
 from app.modules.opgg import *
-
+from app.database.Model import *
 app = FastAPI()
 
 origins = [
@@ -67,17 +68,39 @@ def get_user_log(user_name: str):
     return user_log
 
 @app.get("/friend/{user_name}")
-def get_user_friend(user_name: str):
-    user_log = getUserAllGameData(user_name)
-    if (user_log == {}):
-      return {"result": "no-summoner"}
-    
-    friend = getUserFrield(user_log)
-    return friend
+def get_user_friend(request: Request, user_name: str):
+  # insert ip logs
+  model = Model()
+  client_host = request.client.host
+  now = datetime.now().strftime('%Y%m%d%H%M%S')
+  model.insertIpLog([client_host, user_name, now])
 
-@app.put("/items/{item_id}")
-def update_item(item_id: int, item: Item):
-    return {"item_name": item.name, "item_id": item_id}
+  user_log = getUserAllGameData(user_name)
+  if (user_log == {}):
+    return {"result": "no-summoner"}
+  
+  friend = getUserFrield(user_log)
+  return friend
+
+@app.get("/ip")
+def get_ip(request: Request):
+  client_host = request.client.host
+  return {"client_host": client_host}
+
+@app.get("/insertIPLog/{name}")
+def connect_db(request: Request, name: str):
+  model = Model()
+  client_host = request.client.host
+  now = datetime.now()
+  nowDatetime = now.strftime('%Y%m%d%H%M%S')
+  
+  result = model.insertIpLog([client_host, name, nowDatetime])
+  result = {
+    "client_host": client_host,
+    "name": name,
+    "date": nowDatetime
+  }
+  return result
 
 # if __name__ == "__main__":
 #     user_name = "마리마리착마리"
