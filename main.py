@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import *
 import time
+# import uvicorn
 
 from app.modules.opgg import *
 from app.database.Model import *
@@ -103,14 +104,15 @@ def connect_db(request: Request, name: str):
   }
   return result
 
-@app.route("/duration/{duration}")
+@app.get("/duration/{duration}")
 def waitDuration(duration: int):
   for i in range(duration):
     print(i+1)
     time.sleep(1)
-  return {"result" : str(duration)+' end'}
+  return {"result" : "end"}
 
 # if __name__ == "__main__":
+#   uvicorn.run(app, host="127.0.0.1", port=8000, debug=True)
 #     user_name = "마리마리착마리"
 #     user_log = getUserAllGameData(user_name)
 #     friend = getUserFrield(user_log)
