@@ -52,8 +52,8 @@ def get_user_log(user_name: str):
     return user_log
 
 @app.get("/friend/{user_name}")
-def get_user_friend(user_name: str):
-  user_log = getUserAllGameData(user_name)
+async def get_user_friend(user_name: str):
+  user_log = await getUserAllGameData(user_name)
   if (user_log == {}):
     return {"result": "no-summoner"}
   
@@ -66,7 +66,7 @@ def get_ip(request: Request):
   return {"client_host": client_host}
 
 @app.get("/duration/{duration}")
-def waitDuration(duration: int):
+async def waitDuration(duration: int):
   for i in range(duration):
     print(i+1)
     time.sleep(1)
