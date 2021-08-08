@@ -20,7 +20,7 @@ jobs:
     - name: Set up Python version
       uses: actions/setup-python@v1
       with:
-        python-version: '3.7'
+        python-version: '3.8'
 
     - name: Create and start virtual environment
       run: |
@@ -59,4 +59,4 @@ jobs:
         with:
           app-name: 'lol-network-api'
           slot-name: 'production'
-          publish-profile: ${{ secrets.AzureAppService_PublishProfile_6ac824166cf84e7f951bb39f226873b5 }}
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_05b9c96779f94d9496afeb05f2ee20df }}
