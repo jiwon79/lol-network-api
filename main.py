@@ -52,8 +52,8 @@ def get_user_log(user_name: str):
     return user_log
 
 @app.get("/friend/{user_name}")
-async def get_user_friend(user_name: str):
-  user_log = await getUserAllGameData(user_name)
+def get_user_friend(user_name: str):
+  user_log = getUserAllGameData(user_name)
   if (user_log == {}):
     return {"result": "no-summoner"}
   

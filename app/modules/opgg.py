@@ -26,7 +26,7 @@ def getAGameData(log, user_name):
     return game_data
 
 
-async def getUserAllGameData(user_name: str):
+def getUserAllGameData(user_name: str):
     count = 0
     result = {
         'player': user_name,
