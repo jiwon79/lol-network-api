@@ -3,9 +3,9 @@ from fastapi import FastAPI, Request
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import *
+import time
 
 from app.modules.opgg import *
-from app.database.Model import *
 app = FastAPI()
 
 origins = [
@@ -42,25 +42,9 @@ class Item(BaseModel):
     price: float
     is_offer: Optional[bool] = None
 
-dummy_data = {
-    'node': [
-        {'id': '마리마리착마리', 'value': 1},
-        {'id': '루모그래프', 'value': 1},
-        {'id': '꿀벌지민', 'value': 1},
-        {'id': '리듬타지마', 'value': 1}
-    ],
-    'edge': [
-        {'from': '마리마리착마리', 'to': '루모그래프', 'value': 10},
-        {'from': '마리마리착마리', 'to': '꿀벌지민', 'value': 5},
-        {'from': '루모그래프', 'to': '꿀벌지민', 'value': 15},
-        {'from': '루모그래프', 'to': '리듬타지마', 'value': 3},
-        {'from': '꿀벌지민', 'to': '리듬타지마', 'value': 1}
-    ]
-}
-
 @app.get("/")
 def read_root():
-    return dummy_data
+    return {'result': '결과'}
 
 @app.get("/userlog/{user_name}")
 def get_user_log(user_name: str):
@@ -68,13 +52,7 @@ def get_user_log(user_name: str):
     return user_log
 
 @app.get("/friend/{user_name}")
-def get_user_friend(request: Request, user_name: str):
-  # insert ip logs
-  model = Model()
-  client_host = request.client.host
-  now = datetime.now().strftime('%Y%m%d%H%M%S')
-  model.insertIpLog([client_host, user_name, now])
-
+def get_user_friend(user_name: str):
   user_log = getUserAllGameData(user_name)
   if (user_log == {}):
     return {"result": "no-summoner"}
@@ -87,22 +65,15 @@ def get_ip(request: Request):
   client_host = request.client.host
   return {"client_host": client_host}
 
-@app.get("/insertIPLog/{name}")
-def connect_db(request: Request, name: str):
-  model = Model()
-  client_host = request.client.host
-  now = datetime.now()
-  nowDatetime = now.strftime('%Y%m%d%H%M%S')
-  
-  result = model.insertIpLog([client_host, name, nowDatetime])
-  result = {
-    "client_host": client_host,
-    "name": name,
-    "date": nowDatetime
-  }
-  return result
+@app.get("/duration/{duration}")
+async def waitDuration(duration: int):
+  for i in range(duration):
+    print(i+1)
+    time.sleep(1)
+  return {"result" : "end"}
 
 # if __name__ == "__main__":
+#   uvicorn.run(app, host="127.0.0.1", port=8000, debug=True)
 #     user_name = "마리마리착마리"
 #     user_log = getUserAllGameData(user_name)
 #     friend = getUserFrield(user_log)
