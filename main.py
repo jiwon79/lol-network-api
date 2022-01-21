@@ -47,16 +47,16 @@ class Item(BaseModel):
     is_offer: Optional[bool] = None
 
 @app.get("/")
-def read_root():
+async def read_root():
     return {'result': '결과'}
 
 @app.get("/userlog/{user_name}")
-def get_user_log(user_name: str):
+async def get_user_log(user_name: str):
     user_log = getUserAllGameData(user_name)
     return user_log
 
 @app.get("/friend/{user_name}")
-def get_user_friend(user_name: str):
+async def get_user_friend(user_name: str):
   user_log = getUserAllGameData(user_name)
   if (user_log == {}):
     return {"result": "no-summoner"}
@@ -65,7 +65,7 @@ def get_user_friend(user_name: str):
   return friend
 
 @app.get("/ip")
-def get_ip(request: Request):
+async def get_ip(request: Request):
   client_host = request.client.host
   return {"client_host": client_host}
 
