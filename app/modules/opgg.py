@@ -35,9 +35,11 @@ def getUserAllGameData(user_name: str):
         'gameData': []
     }
     game_data_list = []
-
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko'
+    }
     url = f'https://www.op.gg/summoner/userName={user_name}'
-    response = requests.get(url)
+    response = requests.get(url, headers=headers)
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
