@@ -1,6 +1,8 @@
-import requests
 from bs4 import BeautifulSoup
 from pprint import pprint
+import aiohttp
+import time
+import json
 
 GAME_LIMIT = 4  # 100 games
 FRIEND_LIMIT = 8
@@ -22,8 +24,8 @@ def getAGameData(log, user_name):
                     game_data["team"].append(name)
     return game_data
 
-
-def getUserAllGameData(user_name: str):
+    
+async def getUserAllGameData(user_name: str):
     print(user_name)
     count = 0
     result = {"player": user_name, "profileImage": "", "summonerId": 0, "gameData": []}
@@ -32,51 +34,52 @@ def getUserAllGameData(user_name: str):
         "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko"
     }
     url = f"https://www.op.gg/summoner/userName={user_name}"
-    response = requests.get(url, headers=headers)
+    start_time = time.time()
+    async with aiohttp.ClientSession(headers=headers) as session:
+        async with session.get(url) as response:
+            if response.status != 200:
+                raise Exception("fetch fail")
+            response_text = await response.text()
+    soup = BeautifulSoup(response_text, "html.parser")
+    
+    # if summoner doesn't exist, return {}
+    if soup.select_one(".SummonerNotFoundLayout") is not None:
+        return {}
+    result["profileImage"] = "https:" + soup.select_one(".ProfileImage")["src"]
+    summonerId = int(soup.select_one(".GameListContainer")["data-summoner-id"])
+    result["summonerId"] = summonerId
 
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.text, "html.parser")
+    logs = soup.select("div.GameItemWrap")
+    for log in logs:
+        game_data = getAGameData(log, user_name)
+        game_data_list.append(game_data)
+    print(len(game_data))
 
-        # if summoner doesn't exist, return {}
-        if soup.select_one(".SummonerNotFoundLayout") is not None:
-            return {}
+    # while no information, requests matches data
+    while True:
+        if count == GAME_LIMIT:
+            break
+        count += 1
 
-        result["profileImage"] = "https:" + soup.select_one(".ProfileImage")["src"]
-        summonerId = int(soup.select_one(".GameListContainer")["data-summoner-id"])
-        result["summonerId"] = summonerId
+        # print("GET requests")
+        start_time = game_data_list[-1]["time"]
+        more_url = f"https://www.op.gg/summoner/matches/ajax/averageAndList/startInfo={start_time}&summonerId={summonerId}"
+        print(more_url)
+        async with aiohttp.ClientSession(headers = headers) as session:
+            async with session.get(more_url) as more_response:
+                if more_response.status != 200:
+                    break
+                more_json = await more_response.read();
+        more_html = json.loads(more_json)['html']
+        more_soup = BeautifulSoup(more_html, "html.parser")
+        logs = more_soup.select("div.GameItemWrap")
 
-        logs = soup.select("div.GameItemWrap")
         for log in logs:
             game_data = getAGameData(log, user_name)
             game_data_list.append(game_data)
-
-        # while no information, requests matches data
-        while True:
-            if count == GAME_LIMIT:
-                break
-            count += 1
-
-            # print("GET requests")
-            start_time = game_data_list[-1]["time"]
-            more_url = f"https://www.op.gg/summoner/matches/ajax/averageAndList/startInfo={start_time}&summonerId={summonerId}"
-            header = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:90.0) Gecko/20100101 Firefox/90.0"
-            }
-            more_response = requests.get(more_url, headers=header)
-            if more_response.status_code != 200:
-                break
-            more_html = more_response.json()["html"]
-            more_soup = BeautifulSoup(more_html, "html.parser")
-            logs = more_soup.select("div.GameItemWrap")
-
-            for log in logs:
-                game_data = getAGameData(log, user_name)
-                game_data_list.append(game_data)
-        result["gameData"] = game_data_list
-        # pprint(game_data_list)
-        return result
-    else:
-        raise Exception("fetch fail")
+        print(len(game_data_list))
+    result["gameData"] = game_data_list
+    return result
 
 
 def getUserFrield(user_log):

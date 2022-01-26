@@ -4,9 +4,7 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import *
 import time
-import uvicorn
-
-import aiohttp
+import asyncio
 
 from app.modules.opgg import *
 
@@ -60,7 +58,7 @@ async def read_root():
 
 @app.get("/userlog/{user_name}")
 async def get_user_log(user_name: str):
-    user_log = getUserAllGameData(user_name)
+    user_log = await getUserAllGameData(user_name)
     return user_log
 
 
@@ -82,24 +80,6 @@ async def get_ip(request: Request):
 
 @app.get("/duration/{duration}")
 async def waitDuration(duration: int):
-    for i in range(duration):
-        print(i + 1)
-        time.sleep(1)
-    return {"result": "end"}
-
-
-@app.get("/apitest")
-async def test_api():
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko"
-    }
-    url = f"https://www.op.gg/summoner/userName=마리마리착마리"
-    # response = requests.get(url, headers=headers)
-    # return {'result': 'endd'}
-
-    print("start")
-    async with aiohttp.ClientSession(headers=headers) as session:
-        async with session.get(url) as response:
-            print(await response.text())
-
-    return {"result": "end"}
+    await asyncio.sleep(duration)
+    time.sleep(2)
+    return {'result': 'end'}
