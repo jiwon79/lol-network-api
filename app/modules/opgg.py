@@ -19,6 +19,8 @@ def getAGameData(log, user_name):
     for team in log.select(".Team"):
         if team.select(".Requester") != []:
             for summoner in team.select(".Summoner"):
+                if "(Bot)" in summoner.text:
+                    break
                 name = summoner.select_one(".SummonerName > a").get_text()
                 if user_name.replace(" ", "") != name.replace(" ", ""):
                     game_data["team"].append(name)
