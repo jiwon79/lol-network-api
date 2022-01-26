@@ -27,6 +27,7 @@ def getAGameData(log, user_name):
 
 
 def getUserAllGameData(user_name: str):
+    print(user_name)
     count = 0
     result = {
         'player': user_name,

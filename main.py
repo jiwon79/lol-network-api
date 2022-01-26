@@ -4,6 +4,9 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import *
 import time
+import uvicorn
+
+import aiohttp
 
 from app.modules.opgg import *
 app = FastAPI()
@@ -48,7 +51,7 @@ class Item(BaseModel):
 
 @app.get("/")
 async def read_root():
-    return {'result': '결과'}
+  return {'result': '결과'}
 
 @app.get("/userlog/{user_name}")
 async def get_user_log(user_name: str):
@@ -57,7 +60,7 @@ async def get_user_log(user_name: str):
 
 @app.get("/friend/{user_name}")
 async def get_user_friend(user_name: str):
-  user_log = getUserAllGameData(user_name)
+  user_log = await getUserAllGameData(user_name)
   if (user_log == {}):
     return {"result": "no-summoner"}
   
@@ -75,3 +78,19 @@ async def waitDuration(duration: int):
     print(i+1)
     time.sleep(1)
   return {"result" : "end"}
+
+@app.get("/apitest")
+async def test_api():
+  headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko'
+  }
+  url = f'https://www.op.gg/summoner/userName=마리마리착마리'
+  # response = requests.get(url, headers=headers)
+  # return {'result': 'endd'}
+  
+  print('start')
+  async with aiohttp.ClientSession(headers=headers) as session:
+    async with session.get(url) as response:
+      print(await response.text())
+  
+  return {'result': 'end'}
