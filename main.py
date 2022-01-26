@@ -4,8 +4,6 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import *
 import time
-
-import aiohttp
 import asyncio
 
 from app.modules.opgg import *

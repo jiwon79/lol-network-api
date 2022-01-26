@@ -1,5 +1,3 @@
-from re import S
-import requests
 from bs4 import BeautifulSoup
 from pprint import pprint
 import aiohttp
