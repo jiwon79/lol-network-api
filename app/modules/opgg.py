@@ -3,10 +3,39 @@ from pprint import pprint
 import aiohttp
 import time
 import json
+import asyncio
+from aiohttp import ClientSession
 
 GAME_LIMIT = 4  # 100 games
 FRIEND_LIMIT = 8
 
+async def get_user_data(session, nickname: str):
+    url = f'https://www.op.gg/summoner/userName={nickname}'
+    headers = {'User-Agent': 'Mozilla/5.0'}
+
+    try:
+        async with session.get(url, headers=headers) as response:
+            soup = BeautifulSoup(
+                await response.text(), 'html.parser')
+            data = json.loads(
+                str(soup.select_one("script#__NEXT_DATA__").contents[0])
+            )['props']['pageProps']['data']
+
+            tier_data = data['league_stats'][0]['tier_info']
+            
+            return {
+                'id': data["summoner_id"],
+                'ninkname': data['nickname'],
+                'profile_image': data['profile_image_url'],
+                'level': data['level'],
+                'tier_class': tier_data["tier"],
+                'division': tier_data["division"],
+                'league_points': tier_data["lp"],
+            };
+    except Exception:
+        raise
+        # raise exceptions.APIFetchError
+    
 
 def getAGameData(log, user_name):
     game_data = {"id": 0, "time": 0, "result": "", "team": []}
@@ -107,7 +136,7 @@ def getUserFrield(user_log):
 
 
 # test code
-if __name__ == "__main__":
-    user_log = getUserAllGameData("마리마리착마리")
-    friend = getUserFrield(user_log)
-    pprint(friend)
+# if __name__ == "__main__":
+    # user_log = getUserAllGameData("마리마리착마리")
+    # friend = getUserFrield(user_log)
+    # pprint(friend)
