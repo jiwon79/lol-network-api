@@ -3,13 +3,12 @@ from pprint import pprint
 import aiohttp
 import time
 import json
-import asyncio
 from aiohttp import ClientSession
 
 GAME_LIMIT = 4  # 100 games
 FRIEND_LIMIT = 8
 
-async def get_user_data(session, nickname: str):
+async def get_user_data(session: ClientSession, nickname: str):
     url = f'https://www.op.gg/summoner/userName={nickname}'
     headers = {'User-Agent': 'Mozilla/5.0'}
 
