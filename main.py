@@ -8,6 +8,7 @@ import asyncio
 import aiohttp
 
 from app.modules.opgg import *
+from app.core.constant import *
 
 app = FastAPI()
 
@@ -58,12 +59,16 @@ async def get_user_log(user_name: str):
 
 @app.get("/userdata/{user_name}")
 async def get_user_data(user_name: str):
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko"
-    }
-    async with aiohttp.ClientSession(headers=headers) as session:
+    async with aiohttp.ClientSession(headers=API_HEADER) as session:
         user_data = await getUserData(session, user_name)
         return user_data;
+    
+@app.get("/userhistory/{user_name}")
+async def get_user_history(user_name: str):
+    async with aiohttp.ClientSession(headers=API_HEADER) as session:
+        user_data = await getUserData(session, user_name)
+        user_history = await getUserGameHistory(session, user_data['id'])
+        return user_history
     
 
 @app.get("/friend/{user_name}")
