@@ -8,7 +8,7 @@ from aiohttp import ClientSession
 GAME_LIMIT = 4  # 100 games
 FRIEND_LIMIT = 8
 
-async def get_user_data(session: ClientSession, nickname: str):
+async def getUserData(session, nickname):
     url = f'https://www.op.gg/summoner/userName={nickname}'
     headers = {'User-Agent': 'Mozilla/5.0'}
 
@@ -19,12 +19,12 @@ async def get_user_data(session: ClientSession, nickname: str):
             data = json.loads(
                 str(soup.select_one("script#__NEXT_DATA__").contents[0])
             )['props']['pageProps']['data']
-
+            
             tier_data = data['league_stats'][0]['tier_info']
             
             return {
                 'id': data["summoner_id"],
-                'ninkname': data['nickname'],
+                'name': data['name'],
                 'profile_image': data['profile_image_url'],
                 'level': data['level'],
                 'tier_class': tier_data["tier"],

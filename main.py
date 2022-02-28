@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from datetime import *
 import time
 import asyncio
+import aiohttp
 
 from app.modules.opgg import *
 
@@ -44,13 +45,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-class Item(BaseModel):
-    name: str
-    price: float
-    is_offer: Optional[bool] = None
-
-
 @app.get("/")
 async def read_root():
     return {"result": "결과"}
@@ -61,6 +55,16 @@ async def get_user_log(user_name: str):
     user_log = await getUserAllGameData(user_name)
     return user_log
 
+
+@app.get("/userdata/{user_name}")
+async def get_user_data(user_name: str):
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko"
+    }
+    async with aiohttp.ClientSession(headers=headers) as session:
+        user_data = await getUserData(session, user_name)
+        return user_data;
+    
 
 @app.get("/friend/{user_name}")
 async def get_user_friend(user_name: str):
