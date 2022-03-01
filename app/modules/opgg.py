@@ -4,16 +4,16 @@ import aiohttp
 import time
 import json
 from aiohttp import ClientSession
+from app.core.constant import *
 
 GAME_LIMIT = 4  # 100 games
 FRIEND_LIMIT = 8
 
-async def getUserData(session, nickname):
+async def getUserData(session: ClientSession, nickname: str):
     url = f'https://www.op.gg/summoner/userName={nickname}'
-    headers = {'User-Agent': 'Mozilla/5.0'}
 
     try:
-        async with session.get(url, headers=headers) as response:
+        async with session.get(url, headers=API_HEADER) as response:
             soup = BeautifulSoup(
                 await response.text(), 'html.parser')
             data = json.loads(
@@ -34,6 +34,30 @@ async def getUserData(session, nickname):
     except Exception:
         raise
         # raise exceptions.APIFetchError
+    
+async def getUserGameHistory(session: ClientSession, user_name: str, id: str):
+    url = f'https://lol-api-summoner.op.gg/api/kr/summoners/{id}/games'
+    
+    try:
+        async with session.get(url, headers=API_HEADER) as response:
+            data = json.loads(await response.text())['data']
+            # print(data[0]['participants'])
+            team =getTeamUsers(user_name, data[0]['participants'])
+            print(team)
+             
+            # print(getTeamUsers(user_name, data[0]['participants']))
+            return data
+    except Exception:
+        raise
+
+def getTeamUsers(user_name, user_list):
+    blueTeam, redTeam = [], []
+    for i in range(10):
+        if (user_list[i]['team_key'] == "BLUE"):
+            blueTeam.append(user_list[i]['summoner']['name'])
+        else:
+            redTeam.append(user_list[i]['summoner']['name'])
+    return blueTeam if user_name in blueTeam else redTeam
     
 
 def getAGameData(log, user_name):
@@ -60,12 +84,9 @@ async def getUserAllGameData(user_name: str):
     count = 0
     result = {"player": user_name, "profileImage": "", "summonerId": 0, "gameData": []}
     game_data_list = []
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko"
-    }
     url = f"https://www.op.gg/summoner/userName={user_name}"
     start_time = time.time()
-    async with aiohttp.ClientSession(headers=headers) as session:
+    async with aiohttp.ClientSession(headers=API_HEADER) as session:
         async with session.get(url) as response:
             if response.status != 200:
                 raise Exception("fetch fail")

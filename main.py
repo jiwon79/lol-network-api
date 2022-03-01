@@ -67,7 +67,7 @@ async def get_user_data(user_name: str):
 async def get_user_history(user_name: str):
     async with aiohttp.ClientSession(headers=API_HEADER) as session:
         user_data = await getUserData(session, user_name)
-        user_history = await getUserGameHistory(session, user_data['id'])
+        user_history = await getUserGameHistory(session, user_data['name'], user_data['id'])
         return user_history
     
 
