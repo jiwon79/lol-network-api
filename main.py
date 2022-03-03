@@ -57,17 +57,17 @@ async def get_user_log(user_name: str):
     return user_log
 
 
-@app.get("/userdata/{user_name}")
+@app.get("/data/{user_name}")
 async def get_user_data(user_name: str):
     async with aiohttp.ClientSession(headers=API_HEADER) as session:
         user_data = await getUserData(session, user_name)
         return user_data;
     
-@app.get("/userhistory/{user_name}")
+@app.get("/history/{user_name}")
 async def get_user_history(user_name: str):
     async with aiohttp.ClientSession(headers=API_HEADER) as session:
         user_data = await getUserData(session, user_name)
-        user_history = await getUserGameHistory(session, user_data['name'], user_data['id'])
+        user_history = await getUserFirstHistory(session, user_data['name'], user_data['id'])
         return user_history
     
 

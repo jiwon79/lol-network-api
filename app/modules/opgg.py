@@ -35,18 +35,23 @@ async def getUserData(session: ClientSession, nickname: str):
         raise
         # raise exceptions.APIFetchError
     
-async def getUserGameHistory(session: ClientSession, user_name: str, id: str):
+async def getUserFirstHistory(session: ClientSession, user_name: str, id: str):
     url = f'https://lol-api-summoner.op.gg/api/kr/summoners/{id}/games'
     
     try:
         async with session.get(url, headers=API_HEADER) as response:
             data = json.loads(await response.text())['data']
             # print(data[0]['participants'])
-            team =getTeamUsers(user_name, data[0]['participants'])
-            print(team)
-             
+            teamList = []
+            for i in range(len(data)):
+                team =getTeamUsers(user_name, data[i]['participants'])
+                teamList.append(team)
+            endedAt = data[-1]['created_at']
             # print(getTeamUsers(user_name, data[0]['participants']))
-            return data
+            return {
+                'team_list': teamList,
+                'ended_at': endedAt 
+            }
     except Exception:
         raise
 
