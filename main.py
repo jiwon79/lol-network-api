@@ -65,11 +65,22 @@ async def get_user_data(user_name: str):
     
 @app.get("/history/{user_name}")
 async def get_user_history(user_name: str):
+    team_data = []
+    
     async with aiohttp.ClientSession(headers=API_HEADER) as session:
         user_data = await getUserData(session, user_name)
-        user_history = await getUserFirstHistory(session, user_data['name'], user_data['id'])
-        return user_history
-    
+        user_first_history = await getUserFirstHistory(session, user_data['name'], user_data['id'])
+        for i in range(len(user_first_history['team_list'])):
+            team_data.append(user_first_history['team_list'][i])
+
+        # return team_data
+        for i in range(4):
+            user_history = await getUserHistory(session, user_data['name'], user_data['id'], user_first_history['end_time'])
+            if (len(team_data)%20 != 0):
+                break
+            for i in range(len(user_history['team_list'])):
+                team_data.append(user_history['team_list'][i])
+        return team_data    
 
 @app.get("/friend/{user_name}")
 async def get_user_friend(user_name: str):
