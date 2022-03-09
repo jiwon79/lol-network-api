@@ -50,13 +50,6 @@ app.add_middleware(
 async def read_root():
     return {"result": "결과"}
 
-
-@app.get("/userlog/{user_name}")
-async def get_user_log(user_name: str):
-    user_log = await getUserAllGameData(user_name)
-    return user_log
-
-
 @app.get("/data/{user_name}")
 async def get_user_data(user_name: str):
     async with aiohttp.ClientSession(headers=API_HEADER) as session:
@@ -73,23 +66,14 @@ async def get_user_history(user_name: str):
         for i in range(len(user_first_history['team_list'])):
             team_data.append(user_first_history['team_list'][i])
 
-        # return team_data
         for i in range(4):
             user_history = await getUserHistory(session, user_data['name'], user_data['id'], user_first_history['end_time'])
             if (len(team_data)%20 != 0):
                 break
             for i in range(len(user_history['team_list'])):
                 team_data.append(user_history['team_list'][i])
-        return team_data    
-
-@app.get("/friend/{user_name}")
-async def get_user_friend(user_name: str):
-    user_log = await getUserAllGameData(user_name)
-    if user_log == {}:
-        return {"result": "no-summoner"}
-
-    friend = getUserFrield(user_log)
-    return friend
+        result = getResponse(user_data, team_data)
+        return result 
 
 
 @app.get("/ip")
