@@ -8,6 +8,7 @@ import asyncio
 import aiohttp
 
 from app.modules.opgg import *
+from app.core.constant import *
 
 app = FastAPI()
 
@@ -49,31 +50,30 @@ app.add_middleware(
 async def read_root():
     return {"result": "결과"}
 
-
-@app.get("/userlog/{user_name}")
-async def get_user_log(user_name: str):
-    user_log = await getUserAllGameData(user_name)
-    return user_log
-
-
-@app.get("/userdata/{user_name}")
+@app.get("/data/{user_name}")
 async def get_user_data(user_name: str):
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko"
-    }
-    async with aiohttp.ClientSession(headers=headers) as session:
+    async with aiohttp.ClientSession(headers=API_HEADER) as session:
         user_data = await getUserData(session, user_name)
         return user_data;
     
+@app.get("/history/{user_name}")
+async def get_user_history(user_name: str):
+    team_data = []
+    
+    async with aiohttp.ClientSession(headers=API_HEADER) as session:
+        user_data = await getUserData(session, user_name)
+        user_first_history = await getUserFirstHistory(session, user_data['name'], user_data['id'])
+        for i in range(len(user_first_history['team_list'])):
+            team_data.append(user_first_history['team_list'][i])
 
-@app.get("/friend/{user_name}")
-async def get_user_friend(user_name: str):
-    user_log = await getUserAllGameData(user_name)
-    if user_log == {}:
-        return {"result": "no-summoner"}
-
-    friend = getUserFrield(user_log)
-    return friend
+        for i in range(4):
+            user_history = await getUserHistory(session, user_data['name'], user_data['id'], user_first_history['end_time'])
+            if (len(team_data)%20 != 0):
+                break
+            for i in range(len(user_history['team_list'])):
+                team_data.append(user_history['team_list'][i])
+        result = getResponse(user_data, team_data)
+        return result 
 
 
 @app.get("/ip")
