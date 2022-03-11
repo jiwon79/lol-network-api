@@ -73,7 +73,7 @@ async def get_user_history(user_name: str):
             for i in range(len(user_history['team_list'])):
                 team_data.append(user_history['team_list'][i])
         result = getResponse(user_data, team_data)
-        return result 
+        return result
 
 
 @app.get("/ip")

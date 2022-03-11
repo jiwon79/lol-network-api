@@ -1,14 +1,33 @@
+from operator import le
 from bs4 import BeautifulSoup
-import aiohttp
 import time
 import json
 from aiohttp import ClientSession
+from numpy import number
 from app.core.constant import *
 from urllib import parse
 
 GAME_LIMIT = 4  # 100 games
 FRIEND_LIMIT = 8
 
+class User:
+    def __init__(self, id, name, profile_image, level, tier_class, division, league_point):
+        self.id: str = id
+        self.name: str = name
+        self.profile_image: str = profile_image
+        self.level: number = level
+        self.tier_class: str = tier_class
+        self.division: str = division
+        self.league_point: number = league_point
+        self.history = []
+    
+    def __str__(self):
+        return f'''\
+            username : {self.name}
+            level : {self.level}
+            tier: {self.tier_class} {self.division} {self.league_point}LP\
+                '''
+    
 async def getUserData(session: ClientSession, nickname: str):
     url = f'https://www.op.gg/summoner/userName={nickname}'
 
@@ -20,6 +39,17 @@ async def getUserData(session: ClientSession, nickname: str):
                 str(soup.select_one("script#__NEXT_DATA__").contents[0])
             )['props']['pageProps']['data']
             tier_data = data['league_stats'][0]['tier_info']
+            
+            user = User(
+                id = data["summoner_id"],
+                name = data['name'],
+                profile_image = data['profile_image_url'],
+                level = data['level'],
+                tier_class = tier_data['tier'],
+                division = tier_data['division'],
+                league_point = tier_data['lp']
+            )
+            print(user)
             
             return {
                 'id': data["summoner_id"],
@@ -56,7 +86,7 @@ async def getUserHistory(session: ClientSession, user_name: str, user_id: str, e
     queryList = [('hl', 'ko_KR'), ('game_type', 'TOTAL'), ('ended_at', endTime)]
     query = parse.urlencode(queryList)
     url = f'https://www.op.gg/api/games/kr/summoners/{user_id}?{query}'
-    print(url)
+    
     try:
         async with session.get(url, headers=API_HEADER) as response:
             data = json.loads(await response.text())
