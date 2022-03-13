@@ -1,6 +1,4 @@
-from typing import Optional
 from fastapi import FastAPI, Request
-from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import *
 import time
@@ -9,6 +7,7 @@ import aiohttp
 
 from app.modules.opgg import *
 from app.core.constant import *
+from app.schemas.user import *
 
 app = FastAPI()
 
@@ -50,9 +49,9 @@ app.add_middleware(
 async def read_root():
     return {"result": "결과"}
 
-@app.get("/data/{user_name}")
+@app.get("/data/{user_name}", response_model=User)
 async def get_user_data(user_name: str):
-    async with aiohttp.ClientSession(headers=API_HEADER) as session:
+    async with aiohttp.ClientSession() as session:
         user_data = await getUserData(session, user_name)
         return user_data;
     
