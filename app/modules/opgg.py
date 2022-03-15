@@ -1,14 +1,9 @@
 from bs4 import BeautifulSoup
-import aiohttp
-import time
 import json
 from aiohttp import ClientSession
 from app.core.constant import *
-from urllib import parse
-
-GAME_LIMIT = 4  # 100 games
-FRIEND_LIMIT = 8
-
+from urllib import parse   
+    
 async def getUserData(session: ClientSession, nickname: str):
     url = f'https://www.op.gg/summoner/userName={nickname}'
 
@@ -20,6 +15,7 @@ async def getUserData(session: ClientSession, nickname: str):
                 str(soup.select_one("script#__NEXT_DATA__").contents[0])
             )['props']['pageProps']['data']
             tier_data = data['league_stats'][0]['tier_info']
+            
             
             return {
                 'id': data["summoner_id"],
@@ -56,7 +52,7 @@ async def getUserHistory(session: ClientSession, user_name: str, user_id: str, e
     queryList = [('hl', 'ko_KR'), ('game_type', 'TOTAL'), ('ended_at', endTime)]
     query = parse.urlencode(queryList)
     url = f'https://www.op.gg/api/games/kr/summoners/{user_id}?{query}'
-    print(url)
+    
     try:
         async with session.get(url, headers=API_HEADER) as response:
             data = json.loads(await response.text())
