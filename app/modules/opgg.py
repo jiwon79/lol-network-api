@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from bs4 import BeautifulSoup
 import json
 from aiohttp import ClientSession
@@ -9,13 +10,11 @@ async def getUserData(session: ClientSession, nickname: str):
 
     try:
         async with session.get(url, headers=API_HEADER) as response:
-            soup = BeautifulSoup(
-                await response.text(), 'html.parser')
+            soup = BeautifulSoup(await response.text(), 'html.parser')
             data = json.loads(
                 str(soup.select_one("script#__NEXT_DATA__").contents[0])
             )['props']['pageProps']['data']
             tier_data = data['league_stats'][0]['tier_info']
-            
             
             return {
                 'id': data["summoner_id"],
@@ -27,7 +26,7 @@ async def getUserData(session: ClientSession, nickname: str):
                 'league_points': tier_data["lp"],
             };
     except Exception:
-        raise
+        raise HTTPException(status_code=404, detail="OPGG crawling failed")
         # raise exceptions.APIFetchError
     
 async def getUserFirstHistory(session: ClientSession, user_name: str, id: str):
@@ -76,25 +75,6 @@ def getTeamUsers(user_name, user_list):
         else:
             redTeam.append(user_list[i]['summoner']['name'])
     return blueTeam if user_name in blueTeam else redTeam
-    
-
-def getAGameData(log, user_name):
-    game_data = {"id": 0, "time": 0, "result": "", "team": []}
-
-    gameItem = log.select_one(".GameItem")
-    game_data["id"] = gameItem["data-game-id"]
-    game_data["time"] = gameItem["data-game-time"]
-    game_data["result"] = gameItem["data-game-result"]
-
-    for team in log.select(".Team"):
-        if team.select(".Requester") != []:
-            for summoner in team.select(".Summoner"):
-                if "(Bot)" in summoner.text:
-                    break
-                name = summoner.select_one(".SummonerName > a").get_text()
-                if user_name.replace(" ", "") != name.replace(" ", ""):
-                    game_data["team"].append(name)
-    return game_data
 
 def getResponse(user_data, team_data):
     username = user_data['name']
