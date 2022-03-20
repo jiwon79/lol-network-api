@@ -54,6 +54,13 @@ async def get_user_data(user_name: str):
     async with aiohttp.ClientSession() as session:
         user_data = await getUserData(session, user_name)
         return user_data;
+
+@app.get("/firstHistory/{user_name}", response_model=History)
+async def get_user_first_history(user_name: str):
+    async with aiohttp.ClientSession(headers=API_HEADER) as session:
+        user_data = await getUserData(session, user_name)
+        user_first_history = await getUserFirstHistory(session, user_data['name'], user_data['id'])
+        return user_first_history
     
 @app.get("/history/{user_name}")
 async def get_user_history(user_name: str):
