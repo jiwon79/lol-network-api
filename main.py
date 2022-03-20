@@ -54,6 +54,13 @@ async def get_user_data(user_name: str):
     async with aiohttp.ClientSession() as session:
         user_data = await getUserData(session, user_name)
         return user_data;
+
+@app.get("/firstHistory/{user_name}", response_model=History)
+async def get_user_first_history(user_name: str):
+    async with aiohttp.ClientSession(headers=API_HEADER) as session:
+        user_data = await getUserData(session, user_name)
+        user_first_history = await getUserFirstHistory(session, user_data['name'], user_data['id'])
+        return user_first_history
     
 @app.get("/history/{user_name}")
 async def get_user_history(user_name: str):
@@ -73,16 +80,3 @@ async def get_user_history(user_name: str):
                 team_data.append(user_history['team_list'][i])
         result = getResponse(user_data, team_data)
         return result
-
-
-@app.get("/ip")
-async def get_ip(request: Request):
-    client_host = request.client.host
-    return {"client_host": client_host}
-
-
-@app.get("/duration/{duration}")
-async def waitDuration(duration: int):
-    await asyncio.sleep(duration)
-    time.sleep(2)
-    return {'result': 'end'}
