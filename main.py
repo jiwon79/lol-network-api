@@ -73,16 +73,3 @@ async def get_user_history(user_name: str):
                 team_data.append(user_history['team_list'][i])
         result = getResponse(user_data, team_data)
         return result
-
-
-@app.get("/ip")
-async def get_ip(request: Request):
-    client_host = request.client.host
-    return {"client_host": client_host}
-
-
-@app.get("/duration/{duration}")
-async def waitDuration(duration: int):
-    await asyncio.sleep(duration)
-    time.sleep(2)
-    return {'result': 'end'}

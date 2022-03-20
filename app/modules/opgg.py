@@ -3,9 +3,11 @@ from bs4 import BeautifulSoup
 import json
 from aiohttp import ClientSession
 from app.core.constant import *
+from app.schemas.history import *
+from app.schemas.user import *
 from urllib import parse   
     
-async def getUserData(session: ClientSession, nickname: str):
+async def getUserData(session: ClientSession, nickname: str) -> User:
     url = f'https://www.op.gg/summoner/userName={nickname}'
 
     try:
@@ -29,7 +31,7 @@ async def getUserData(session: ClientSession, nickname: str):
         raise HTTPException(status_code=404, detail="OPGG crawling failed")
         # raise exceptions.APIFetchError
     
-async def getUserFirstHistory(session: ClientSession, user_name: str, id: str):
+async def getUserFirstHistory(session: ClientSession, user_name: str, id: str) -> History:
     url = f'https://lol-api-summoner.op.gg/api/kr/summoners/{id}/games'
     
     try:
@@ -47,7 +49,7 @@ async def getUserFirstHistory(session: ClientSession, user_name: str, id: str):
     except Exception:
         raise
 
-async def getUserHistory(session: ClientSession, user_name: str, user_id: str, endTime: str):
+async def getUserHistory(session: ClientSession, user_name: str, user_id: str, endTime: str) -> History:
     queryList = [('hl', 'ko_KR'), ('game_type', 'TOTAL'), ('ended_at', endTime)]
     query = parse.urlencode(queryList)
     url = f'https://www.op.gg/api/games/kr/summoners/{user_id}?{query}'
