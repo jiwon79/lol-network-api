@@ -79,6 +79,8 @@ def getTeamUsers(user_name, user_list):
     return blueTeam if user_name in blueTeam else redTeam
 
 def getResponse(user_data, team_data):
+    print(user_data, team_data)
+    
     username = user_data['name']
     profileImg = user_data['profile_image']
     friends = {}
@@ -96,6 +98,34 @@ def getResponse(user_data, team_data):
         if friends[key] > 1:
             friendResult.append({key: friends[key]})
     friendResult = sorted(friendResult, key=lambda info: list(info.values())[0], reverse=True)
+    
+    return {
+        "userName": username,
+        "profileImage": profileImg,
+        "friend": friendResult,
+    }
+
+def getFriendsResponse(user_data, team_data):
+    username = user_data['name']
+    profileImg = user_data['profile_image']
+    friends = {}
+    friendResult = []
+    
+    for i in range(len(team_data)):
+        for member in team_data[i]:
+            if (member != username):
+                if member in friends:
+                    friends[member] += 1
+                else:
+                    friends[member] = 0
+    
+    for key in friends.keys():
+        if friends[key] > 1:
+            friendResult.append({
+                'username': key,
+                'weight': friends[key]
+            })
+    friendResult = sorted(friendResult, key=lambda info: info['weight'], reverse=True)
     
     return {
         "userName": username,
