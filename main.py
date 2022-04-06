@@ -62,26 +62,8 @@ async def get_user_first_history(user_name: str):
         user_first_history = await getUserFirstHistory(session, user_data['name'], user_data['id'])
         return user_first_history
     
-@app.get("/oldhistory/{user_name}")
-async def get_user_history(user_name: str):
-    team_data = []
-    
-    async with aiohttp.ClientSession(headers=API_HEADER) as session:
-        user_data = await getUserData(session, user_name)
-        user_first_history = await getUserFirstHistory(session, user_data['name'], user_data['id'])
-        for i in range(len(user_first_history['team_list'])):
-            team_data.append(user_first_history['team_list'][i])
 
-        for i in range(4):
-            user_history = await getUserHistory(session, user_data['name'], user_data['id'], user_first_history['end_time'])
-            if (len(team_data)%20 != 0):
-                break
-            for i in range(len(user_history['team_list'])):
-                team_data.append(user_history['team_list'][i])
-        result = getResponse(user_data, team_data)
-        return result
-
-@app.get("/history/{user_name}")
+@app.get("/history/{user_name}", response_model=UserNetwork)
 async def get_user_history(user_name: str):
     team_data = []
     

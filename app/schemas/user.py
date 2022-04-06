@@ -16,6 +16,6 @@ class FriendModel(BaseModel):
     weight: Decimal
     
 class UserNetwork(BaseModel):
-    username: str
+    userName: str
     profileImage: str
     friend: List[FriendModel]
