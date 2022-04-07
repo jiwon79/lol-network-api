@@ -1,8 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import *
-import time
-import asyncio
 import aiohttp
 
 from app.modules.opgg import *
@@ -73,7 +71,7 @@ async def get_user_history(user_name: str):
         for i in range(len(user_first_history['team_list'])):
             team_data.append(user_first_history['team_list'][i])
 
-        for i in range(4):
+        for i in range(GAME_LIMIT):
             user_history = await getUserHistory(session, user_data['name'], user_data['id'], user_first_history['end_time'])
             if (len(team_data)%20 != 0):
                 break
