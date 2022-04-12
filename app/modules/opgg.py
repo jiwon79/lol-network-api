@@ -61,11 +61,8 @@ async def getUserHistory(session: ClientSession, user_name: str, user_id: str, e
             teamList = []
             print()
             for i in range(len(data['data'])):
-                try:
-                    team = getTeamUsers(user_name, data['data'][i]['participants'])
-                    teamList.append(team)
-                except:
-                    continue            
+                team = getTeamUsers(user_name, data['data'][i]['participants'])
+                teamList.append(team)
             return {
                 'team_list': teamList,
                 'end_time': data['meta']['last_game_created_at']
@@ -76,10 +73,13 @@ async def getUserHistory(session: ClientSession, user_name: str, user_id: str, e
 def getTeamUsers(user_name, user_list):
     blueTeam, redTeam = [], []
     for i in range(10):
-        if (user_list[i]['team_key'] == "BLUE"):
-            blueTeam.append(user_list[i]['summoner']['name'])
-        else:
-            redTeam.append(user_list[i]['summoner']['name'])
+        try:
+            if (user_list[i]['team_key'] == "BLUE"):
+                blueTeam.append(user_list[i]['summoner']['name'])
+            else:
+                redTeam.append(user_list[i]['summoner']['name'])
+        except:
+            return []
     return blueTeam if user_name in blueTeam else redTeam
 
 def getResponse(user_data, team_data):
