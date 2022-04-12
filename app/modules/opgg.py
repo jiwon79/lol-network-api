@@ -1,3 +1,4 @@
+from logging import exception
 from fastapi import HTTPException
 from bs4 import BeautifulSoup
 import json
@@ -58,10 +59,13 @@ async def getUserHistory(session: ClientSession, user_name: str, user_id: str, e
         async with session.get(url, headers=API_HEADER) as response:
             data = json.loads(await response.text())
             teamList = []
+            print()
             for i in range(len(data['data'])):
-                team = getTeamUsers(user_name, data['data'][i]['participants'])
-                teamList.append(team)
-                
+                try:
+                    team = getTeamUsers(user_name, data['data'][i]['participants'])
+                    teamList.append(team)
+                except:
+                    continue            
             return {
                 'team_list': teamList,
                 'end_time': data['meta']['last_game_created_at']
