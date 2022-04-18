@@ -11,3 +11,10 @@ Server : https://lol-network-api.herokuapp.com/
 ## Tech Stack
 1. Python (FastAPI, Beautiful Soup)
 2. heroku
+
+## EndPoints
+
+/data/{username}\
+/firsthistory/{username}\
+/history/{username}\
+/friends/{username}
