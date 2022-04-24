@@ -25,3 +25,10 @@ Server : https://lol-network-api.herokuapp.com/
 
 /friends/{username}
 유저와 같이 플레이한 사람 목록을 가져옴
+
+## Contact
+수정할 것이 있다면 pull & request로, 문의할 것이 있다면 아래의 이메일로 연락 부탁드립니다.\
+mail: jiiwon79@gmail.com
+
+## License
+This project is licensed under the terms of the MIT license.
